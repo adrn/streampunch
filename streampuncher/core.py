@@ -159,6 +159,7 @@ class StreamPuncher:
         # The timestep values are positive, but we negate them below
         dt = np.abs(dt)  # timestep used to resolve the impact
         coarse_dt = dt * coarse_dt_factor  # timestep used after impact
+        # MAGIC NUMBER:
         back_dt = 8 * u.Myr  # used when we just need to rewind/fast-forward
 
         # Compute the orbit of the impact site. The timestep here is arbitrary
@@ -174,7 +175,7 @@ class StreamPuncher:
         t_buffer = (impact_dist_buffer / rel_v).to(u.Myr)
         t_buffer = int(t_buffer / dt) * dt  # round to factor of dt
 
-        # Timing information:
+        # Times:
         t1_impact = tau - t_buffer
         t2_impact = tau + t_buffer
 
@@ -198,6 +199,7 @@ class StreamPuncher:
         stream_tmp_orbits = self.external_potential.integrate_orbit(
             self.stream, t1=self.t_today, t2=t1_impact, dt=-back_dt,
             Integrator=gi.DOPRI853Integrator)
+
         E = stream_tmp_orbits[:, 0].energy()
         dE = np.abs((E[1:] - E[0]) / E[0])
         assert np.all(dE < 1e-8)
@@ -221,6 +223,7 @@ class StreamPuncher:
         if 'nbody' in self._cache:
             nbody = self._cache['nbody']
             nbody.particle_potentials[0] = perturber_potential
+            nbody.w0 = all_w0_past
         else:
             ppots = ([perturber_potential] +
                      [gp.NullPotential(self.units)] * self._n_stream)
