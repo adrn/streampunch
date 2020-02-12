@@ -111,8 +111,8 @@ class StreamPuncher:
         # This should be in Galactocentric Cartesian coordinates now!
         return gd.PhaseSpacePosition(pos, vel)
 
-    # @u.quantity_input(b=u.pc, psi=u.degree, vz=u.km/u.s, vpsi=u.km/u.s,
-    #                   tau=u.Myr, dt=u.Myr, impact_dist_buffer=u.kpc)
+    @u.quantity_input(b=u.pc, psi=u.degree, vz=u.km/u.s, vpsi=u.km/u.s,
+                      tau=u.Myr, dt=u.Myr, impact_dist_buffer=u.kpc)
     def run(self, b, psi, vz, vpsi, tau,
             perturber_potential,
             dt=0.25*u.Myr, coarse_dt_factor=4,
